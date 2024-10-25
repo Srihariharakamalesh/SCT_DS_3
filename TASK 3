@@ -1,0 +1,76 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+df = pd.read_csv("archive (3).csv")
+
+df.head()
+
+df.info()
+
+
+df.describe()
+
+df.isna().sum()
+
+df.duplicated().sum()
+
+df['month'].value_counts()
+
+df['marital'].value_counts()
+
+df['education'].value_counts()
+     
+ 
+
+df['housing'].value_counts()
+
+ df['loan'].value_counts()
+
+convert = {'housing': {'yes':1, 'no':0},
+           'contact': {'cellular':0, 'unknown':1, 'telephone':2},
+           'default': {'yes':1, 'no':0}, 'loan': {'yes':1, 'no':0},
+           'education':{'primary':0, 'secondary':1, 'tertiary':2, 'unknown':3},
+           'marital':{'married':0, 'single':1, 'divorced':2},
+           'job':{'management':0, 'blue-collar':1, 'technician':2, 'admin.':3,
+                  'services':4, 'retired':5, 'self-employed':6, 'unemployed':7,
+                  'entrepreneur':8, 'housemaid':9, 'student':10, 'unknown':11},
+           'month':{'jan':0, 'feb':1,'mar':2, 'apr':3, 'may':4 ,'jun':5, 'jul':6,
+                    'aug':7, 'sep':8, 'oct':9, 'nov':10, 'dec':11},
+           'poutcome':{'unknown':0, 'failure':1,'other':2, 'success':3}}
+df = df.replace(convert)
+df
+
+xc = ['age','job','marital','education','default','balance','housing','loan','contact','day','month',
+      'duration','campaign','pdays','previous','poutcome']
+y = ['yes','no']
+all_inputs = df[xc]
+all_classes = df['deposit']
+     
+
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(all_inputs, all_classes, test_size=0.7, random_state=1)
+     
+
+
+from sklearn.tree import DecisionTreeClassifier
+clf = DecisionTreeClassifier(random_state=0)
+     
+
+
+clf = clf.fit(x_train, y_train)
+     
+
+score = clf.score(x_test, y_test)
+print(score)
+     
+
+from sklearn import tree
+
+fig = plt.figure(figsize=(25,30))
+_=tree.plot_tree(clf,feature_names=xc, class_names=y, filled=True, fontsize = 16)
+     
+
